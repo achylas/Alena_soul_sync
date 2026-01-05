@@ -1,3 +1,118 @@
-.profile { display: grid; gap: 16px }
-.profile-title { font-weight: 700; font-size: 20px }
-.profile-form { display: grid; gap: 10px; max-width: 520px }
+/* Fullscreen centered background */
+.profile-screen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #e0f2fe; /* soft light sky blue */
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card */
+.profile-card {
+  width: 100%;
+  max-width: 700px;
+  background-color: #ffffff; /* pure white */
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* soft shadow */
+  display: grid;
+  gap: 24px;
+  color: #1e293b; /* dark blue-gray text */
+}
+
+/* Title */
+.profile-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #e4e8f2; /* very dark blue for contrast */
+}
+
+/* Grid layout for fields: 2 per row */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Full width field */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Individual field */
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label */
+.profile-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #d9e0ea; /* soft gray-blue */
+}
+
+/* Input wrapper with icon */
+.profile-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f1f5f9; /* very light gray */
+  border-radius: 12px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1; /* soft border */
+  transition: all 0.25s ease;
+}
+
+.profile-input input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b; /* dark blue-gray */
+}
+
+.profile-input input:focus {
+  outline: none;
+}
+
+/* Icon */
+.profile-icon {
+  font-size: 18px;
+  color: #3b82f6; /* soft blue icon */
+}
+
+/* Hover effect on input wrapper */
+.profile-input:hover {
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Actions */
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* Delete button */
+.btn-danger {
+  background-color: #f87171; /* soft red */
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #ef4444;
+  transform: translateY(-2px);
+}
