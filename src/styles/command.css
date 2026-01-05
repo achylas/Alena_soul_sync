@@ -1,0 +1,8 @@
+ .cmd-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: grid; place-items: center; z-index: 1000 }
+ .cmd { width: 520px; max-width: 92vw; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 24px 40px var(--shadow); padding: 12px }
+ .cmd input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: #0b0e13; color: var(--text) }
+ .cmd-list { display: grid; gap: 8px; margin-top: 10px; max-height: 240px; overflow: auto }
+ .cmd-item { text-align: left; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(180deg, #1a1f29 0%, #161b24 100%); color: var(--text); cursor: pointer }
+ .cmd-item:hover { border-color: var(--primary) }
+ .cmd-empty { color: var(--muted); padding: 10px 12px }
+ .cmd-hints { color: var(--muted); font-size: 12px; margin-top: 8px }

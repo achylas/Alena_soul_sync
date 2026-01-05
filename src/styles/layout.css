@@ -1,0 +1,249 @@
+.app-shell { 
+  display: grid; 
+  grid-template-columns: 240px 1fr; 
+  height: 100vh; 
+}
+
+.app-shell.collapsed { 
+  grid-template-columns: 72px 1fr; 
+}
+
+.sidebar { 
+  background: var(--panel); 
+  border-right: 1px solid var(--border); 
+  padding: 20px 16px; 
+  display: grid; 
+  grid-template-rows: auto 1fr auto; 
+  backdrop-filter: blur(8px); /* Soft blur for calm depth */
+  transition: all 0.3s ease;
+}
+
+.brand { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  font-weight: 700; 
+  font-size: 18px; 
+  letter-spacing: 0.4px; 
+}
+
+.brand-mark { 
+  width: 32px; 
+  height: 32px; 
+  border-radius: 10px; 
+  display: grid; 
+  place-items: center; 
+  background: linear-gradient(135deg, var(--accent) 0%, var(--primary-2) 100%); /* Softer green-indigo blend */
+  color: #fff; 
+  font-size: 14px; 
+  font-weight: 700; 
+}
+
+.nav { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 12px; 
+  border-radius: 12px; 
+  margin-top: 4px; 
+  border: 1px solid transparent; 
+  transition: all 0.3s ease; 
+  min-height: 44px; 
+}
+
+.nav:hover { 
+  background: rgba(134, 239, 172, 0.08); /* Very subtle green tint */
+  border-color: var(--border); 
+}
+
+.nav.active { 
+  background: rgba(134, 239, 172, 0.15); /* Soft mint highlight for active */
+  border-color: var(--accent); 
+  color: var(--primary); 
+}
+
+.nav .icon { 
+  width: 24px; 
+  height: 24px; 
+  color: var(--muted); 
+}
+
+.nav.active .icon { 
+  color: var(--accent); 
+}
+
+/* Collapsed sidebar - clean and minimal */
+.app-shell.collapsed .sidebar { 
+  padding: 20px 12px; 
+  background: var(--panel); 
+  border-right: 1px solid var(--border); 
+}
+
+.app-shell.collapsed .brand .label { 
+  display: none; 
+}
+
+.app-shell.collapsed .nav { 
+  justify-content: center; 
+  padding: 12px; 
+  gap: 0; 
+}
+
+.app-shell.collapsed .nav .label { 
+  display: none; 
+}
+
+.app-shell.collapsed .nav:hover::after { 
+  content: attr(data-label); 
+  position: absolute; 
+  left: 100%; 
+  margin-left: 12px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  background: var(--panel); 
+  border: 1px solid var(--border); 
+  border-radius: 10px; 
+  color: var(--text); 
+  padding: 8px 12px; 
+  white-space: nowrap; 
+  box-shadow: 0 8px 20px var(--shadow); 
+  font-size: 14px;
+}
+
+.app-shell.collapsed .nav.active { 
+  background: rgba(134, 239, 172, 0.2); 
+}
+
+.app-shell.collapsed .nav.active .icon { 
+  color: var(--accent); 
+}
+
+/* Light theme subtle adjustments */
+.theme-light .app-shell.collapsed .nav.active { 
+  background: rgba(134, 239, 172, 0.12); 
+}
+
+.sidebar-footer { 
+  margin-top: 20px; 
+  color: var(--muted); 
+  font-size: 13px; 
+  text-align: center; 
+}
+
+.app-main { 
+  display: grid; 
+  grid-template-rows: 64px 1fr; 
+}
+
+.topbar { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  background: var(--panel); /* Clean and matching sidebar */
+  border-bottom: 1px solid var(--border); 
+  padding: 0 24px; 
+  backdrop-filter: blur(8px);
+}
+
+.top-title { 
+  font-weight: 600; 
+  font-size: 16px; 
+}
+
+.top-actions { 
+  display: flex; 
+  gap: 16px; 
+  align-items: center; 
+}
+
+.user-chip { 
+  padding: 8px 14px; 
+  border-radius: 999px; 
+  background: rgba(134, 239, 172, 0.15); 
+  border: 1px solid var(--border); 
+  font-size: 14px; 
+  color: var(--text);
+}
+
+.app-content { 
+  padding: 24px; 
+  overflow: auto; 
+  background: var(--bg);
+}
+
+.card { 
+  background: var(--panel); 
+  border: 1px solid var(--border); 
+  border-radius: 20px; 
+  padding: 20px; 
+  box-shadow: 0 4px 16px var(--shadow); /* Subtle elevation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 24px var(--shadow); 
+}
+
+.card + .card { 
+  margin-top: 20px; 
+}
+
+.card-title { 
+  font-weight: 600; 
+  font-size: 16px; 
+  margin-bottom: 12px; 
+  color: var(--text);
+}
+
+.card-actions { 
+  margin-top: 16px; 
+  display: flex; 
+  gap: 12px; 
+}
+
+/* Collapse rail - softer button */
+.collapse-rail { 
+  position: fixed; 
+  left: 240px; /* Adjust based on sidebar width */
+  top: 50%; 
+  transform: translateY(-50%); 
+  z-index: 999; 
+  transition: left 0.3s ease;
+}
+
+.app-shell.collapsed .collapse-rail { 
+  left: 72px; 
+}
+
+.rail-btn { 
+  width: 40px; 
+  height: 40px; 
+  border-radius: 999px; 
+  border: 1px solid var(--border); 
+  background: var(--panel); 
+  color: var(--muted); 
+  box-shadow: 0 4px 12px var(--shadow); 
+  cursor: pointer; 
+  display: grid; 
+  place-items: center;
+}
+
+.rail-btn:hover { 
+  background: rgba(134, 239, 172, 0.2); 
+  color: var(--accent);
+}
+
+/* Light/Dark overrides */
+.theme-light .topbar { 
+  background: var(--panel); 
+}
+
+.theme-light .card { 
+  background: var(--panel); 
+}
+
+.theme-dark .card { 
+  background: var(--panel); 
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}

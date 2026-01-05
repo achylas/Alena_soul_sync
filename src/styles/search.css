@@ -1,0 +1,9 @@
+.search { position: relative; width: 320px }
+.search-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: #0b0e13; color: var(--text) }
+.search-list { position: absolute; top: 38px; left: 0; width: 100%; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 12px 24px var(--shadow); z-index: 100 }
+.search-item { display: grid; gap: 4px; text-align: left; width: 100%; padding: 8px 10px; border: 0; border-bottom: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer }
+.search-item:last-child { border-bottom: 0 }
+.search-item:hover { background: rgba(124,77,255,0.08) }
+.search-item-top { display: flex; gap: 6px; align-items: center }
+/* Light theme overrides */
+.theme-light .search-input { background: #ffffff; color: var(--text) }

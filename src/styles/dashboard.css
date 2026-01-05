@@ -1,0 +1,264 @@
+/* ==============================
+   GRID LAYOUTS
+============================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+/* ==============================
+   WELCOME / HEADER
+============================== */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcome-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* ==============================
+   LISTS (ASSESSMENTS / HISTORY)
+============================== */
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: 120px 1fr 90px 140px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow: 0 4px 14px var(--shadow);
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.list-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   SCORE & SEVERITY (CLINICAL)
+============================== */
+.score {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.severity {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Emotionally safe severity colors */
+.severity.low {
+  color: var(--accent);        /* calm, reassuring */
+}
+
+.severity.moderate {
+  color: var(--primary);      /* informative, neutral */
+}
+
+.severity.high {
+  color: var(--danger);       /* visible but muted */
+}
+
+/* ==============================
+   CHART CONTAINER
+============================== */
+.chart-wrap {
+  min-height: 280px;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #151a22, #1c2230);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ==============================
+   CARD BASE
+============================== */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+}
+
+/* Card header */
+.card > .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.card > .card-header > h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Card actions/buttons */
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.card-actions .btn {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-actions .btn.primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.card-actions .btn:hover {
+  filter: brightness(1.1);
+}
+
+
+/* ==============================
+   QUICK STATS (SUMMARY CARDS)
+============================== */
+.quick {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.quick-item {
+  padding: 20px;
+  text-align: center;
+
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  box-shadow: 0 6px 16px var(--shadow);
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.quick-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
+/* ==============================
+   QUICK ITEM CONTENT
+============================== */
+
+
+.quick-item .pill {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(107,91,255,0.1);
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.quick-item .score {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.quick-item-title {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.quick-item-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+}
+.list-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 90px 120px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+
+  background: linear-gradient(180deg, #151a22, #1c2230);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+.list-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.list-item .pill {
+  background: rgba(107,91,255,0.1);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.severity.low { color: #4caf50; }        /* Green = Calm */
+.severity.moderate { color: #ffb400; }   /* Yellow = Moderate */
+.severity.high { color: #f44336; }       /* Red = High */
+
+/* ==============================
+   THEME CONSISTENCY
+============================== */
+.theme-light .list-item,
+.theme-light .quick-item,
+.theme-light .chart-wrap {
+  background: var(--panel);
+}
+
+.theme-light .list-item:hover,
+.theme-light .quick-item:hover {
+  border-color: var(--primary);
+}

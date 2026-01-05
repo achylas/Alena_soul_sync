@@ -1,0 +1,1 @@
+.history{display:grid;gap:16px}.history-title{font-weight:700;font-size:20px}.table{background:var(--panel);border:1px solid var(--border);border-radius:12px}.thead,.tr{display:grid;grid-template-columns:140px 1fr 100px 160px;gap:8px;padding:10px;border-bottom:1px solid var(--border)}.thead{font-weight:700}.tbody .tr:hover{background:#1a1f29}

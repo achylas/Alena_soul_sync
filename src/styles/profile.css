@@ -1,0 +1,3 @@
+.profile { display: grid; gap: 16px }
+.profile-title { font-weight: 700; font-size: 20px }
+.profile-form { display: grid; gap: 10px; max-width: 520px }
