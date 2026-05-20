@@ -1,116 +1,98 @@
-/* ====== ROOT ENHANCEMENTS ====== */
-:root {
-  --primary: #6b5bff;
-  --primary-2: #8b7cff;
-  --success: #2ecc71;
-  --danger: #ff6b6b;
-  --glass: rgba(255,255,255,0.06);
-  --blur: blur(14px);
-}
-
-/* ====== LAYOUT ====== */
+/* =============================================
+   TESTS PAGE
+============================================= */
 .test {
-  max-width: 720px;
+  max-width: 680px;
   margin: 0 auto;
   display: grid;
-  gap: 18px;
+  gap: 20px;
 }
 
 .tests-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
-  letter-spacing: 0.3px;
+  letter-spacing: -0.02em;
   text-align: center;
+  color: var(--text);
 }
 
-/* ====== PROGRESS BAR ====== */
+/* =============================================
+   PROGRESS BAR
+============================================= */
 .progress {
-  height: 10px;
+  height: 6px;
   border-radius: 999px;
-  background: #1a1f29;
-  border: 1px solid var(--border);
+  background: var(--border);
   overflow: hidden;
 }
 
 .progress > span {
   display: block;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    var(--primary) 0%,
-    var(--primary-2) 100%
-  );
-  box-shadow: 0 0 12px rgba(107,91,255,0.6);
-  transition: width 0.4s ease;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-2) 100%);
+  box-shadow: 0 0 10px rgba(107, 143, 255, 0.4);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ====== QUESTION CARD ====== */
+/* =============================================
+   QUESTION CARD
+============================================= */
 .qa-item.question-card {
-  background: linear-gradient(
-    180deg,
-    rgba(26,31,41,0.9) 0%,
-    rgba(18,22,30,0.95) 100%
-  );
-  backdrop-filter: var(--blur);
-  border-radius: 18px;
-  padding: 24px;
+  background: var(--panel);
   border: 1px solid var(--border);
-  box-shadow:
-    0 20px 40px rgba(0,0,0,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.03);
-  animation: fadeSlide 0.35s ease;
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: 0 8px 32px var(--shadow);
+  animation: fadeSlide 0.3s ease;
 }
 
 .q {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 18px;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+  line-height: 1.5;
 }
 
-/* ====== OPTIONS ====== */
+/* =============================================
+   OPTIONS
+============================================= */
 .a {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, max-content));
-  gap: 12px;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
 }
-
 
 .option {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
-  max-width: 320px;
-  width: 100%;
-  border-radius: 14px;
-  background: rgba(18,22,30,0.9);
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-2);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .option:hover {
-  transform: translateY(-1px);
   border-color: var(--primary);
-  background: rgba(107,91,255,0.08);
+  background: var(--primary-soft);
+  transform: translateY(-1px);
 }
 
 .option.selected {
-  background: linear-gradient(
-    135deg,
-    rgba(107,91,255,0.18),
-    rgba(107,91,255,0.06)
-  );
+  background: var(--primary-soft);
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(107,91,255,0.15);
+  box-shadow: 0 0 0 3px rgba(107, 143, 255, 0.12);
 }
 
-/* ====== CUSTOM RADIO ====== */
+/* Custom radio */
 .option input {
   position: absolute;
   opacity: 0;
+  pointer-events: none;
 }
 
 .control {
@@ -120,13 +102,13 @@
   border: 2px solid var(--border);
   position: relative;
   flex-shrink: 0;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .control::after {
   content: '';
   position: absolute;
-  inset: 4px;
+  inset: 3px;
   background: var(--primary);
   border-radius: 50%;
   transform: scale(0);
@@ -142,27 +124,28 @@
 }
 
 .option-label {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  color: var(--text);
 }
 
-/* ====== ADVANCED CARD ====== */
+/* =============================================
+   ADVANCED CARD
+============================================= */
 .advanced {
-  background: linear-gradient(
-    180deg,
-    rgba(18,22,30,0.95),
-    rgba(14,18,26,0.95)
-  );
-  border-radius: 18px;
-  padding: 20px;
+  background: var(--panel);
   border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  box-shadow: 0 4px 16px var(--shadow);
 }
 
 .advanced-title {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
+  color: var(--text);
 }
 
 .advanced-grid {
@@ -172,22 +155,25 @@
 }
 
 .advanced-group label {
-  font-size: 13px;
-  opacity: 0.9;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
 }
 
-/* ====== RANGE SLIDERS ====== */
+/* =============================================
+   RANGE SLIDERS
+============================================= */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
+  height: 5px;
   border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    var(--primary),
-    var(--primary-2)
-  );
+  background: var(--border);
   outline: none;
+  width: 100%;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -195,21 +181,39 @@ input[type="range"]::-webkit-slider-thumb {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(107,91,255,0.35);
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(107, 143, 255, 0.2);
   cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
 
-/* ====== TEXTAREA ====== */
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 5px rgba(107, 143, 255, 0.25);
+}
+
+/* =============================================
+   TEXTAREA
+============================================= */
 textarea {
-  background: rgba(255,255,255,0.04);
+  background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: var(--radius);
+  padding: 12px 14px;
   color: var(--text);
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
 }
 
-/* ====== BUTTONS ====== */
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(107, 143, 255, 0.12);
+}
+
+/* =============================================
+   STEP ACTIONS
+============================================= */
 .step-actions {
   display: flex;
   justify-content: space-between;
@@ -217,51 +221,62 @@ textarea {
 }
 
 .btn {
-  padding: 12px 18px;
-  border-radius: 14px;
+  padding: 11px 20px;
+  border-radius: var(--radius);
   font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
 }
 
 .btn.primary {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-2)
-  );
-  color: white;
-  box-shadow: 0 12px 24px rgba(107,91,255,0.35);
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 16px rgba(107, 143, 255, 0.3);
 }
 
 .btn.primary:hover {
+  background: var(--primary-2);
+  border-color: var(--primary-2);
   transform: translateY(-1px);
-  box-shadow: 0 16px 32px rgba(107,91,255,0.45);
+  box-shadow: 0 6px 20px rgba(107, 143, 255, 0.4);
 }
 
 .btn.ghost {
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+  border-color: var(--border);
+  color: var(--muted);
 }
 
 .btn.ghost:hover {
   border-color: var(--primary);
   color: var(--primary);
+  background: var(--primary-soft);
 }
 
-/* ====== ERROR ====== */
+/* =============================================
+   ERROR
+============================================= */
 .error {
   color: var(--danger);
+  font-size: 13px;
   font-weight: 500;
   text-align: center;
+  padding: 10px;
+  background: var(--danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: var(--radius-sm);
 }
 
-/* ====== ANIMATION ====== */
+/* =============================================
+   ANIMATION
+============================================= */
 @keyframes fadeSlide {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -269,12 +284,19 @@ textarea {
   }
 }
 
-/* ====== LIGHT THEME ====== */
+/* =============================================
+   LIGHT THEME
+============================================= */
 .theme-light .qa-item,
 .theme-light .advanced {
-  background: #ffffff;
+  background: var(--panel);
 }
 
 .theme-light .option {
-  background: #ffffff;
+  background: var(--panel-soft);
+}
+
+.theme-light .option:hover,
+.theme-light .option.selected {
+  background: var(--primary-soft);
 }

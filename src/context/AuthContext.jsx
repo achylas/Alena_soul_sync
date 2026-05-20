@@ -1,54 +1,50 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import * as auth from '../services/auth'
-import { clearSessions } from '../services/storage'
+import { createContext, useContext, useEffect, useState } from 'react'
+import * as fbAuth from '../services/firebaseAuth'
 
 const AuthCtx = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
-    const email = localStorage.getItem('mh_current_user_email')
-    if (email) {
-      const u = auth.getUserByEmail(email)
-      if (u) setUser({ email: u.email, displayName: u.displayName })
-    }
+    const unsub = fbAuth.subscribeAuth(async (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
+
+      const profile = await fbAuth.getUserProfile(firebaseUser.uid)
+
+      setUser({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName || profile?.displayName || '',
+      })
+      setLoading(false)
+    })
+
+    return unsub
   }, [])
-  const value = useMemo(() => ({
+
+  const value = {
     user,
-    async signup(payload) {
-      const u = await auth.signup(payload)
-      localStorage.setItem('mh_current_user_email', u.email)
-      setUser({ email: u.email, displayName: u.displayName })
-      return u
-    },
-    async login(email, password) {
-      const u = await auth.login(email, password)
-      localStorage.setItem('mh_current_user_email', u.email)
-      setUser({ email: u.email, displayName: u.displayName })
-      return u
-    },
-    logout() {
-      localStorage.removeItem('mh_current_user_email')
-      setUser(null)
-    },
-    async resetPassword(email, answer, newPassword) {
-      return auth.resetPassword(email, answer, newPassword)
-    },
-    async updateProfile(updates) {
-      const updated = await auth.updateProfile(user.email, updates)
-      setUser({ email: updated.email, displayName: updated.displayName })
-      return updated
-    },
-    async deleteAccount() {
-      if (!user) return
-      await auth.deleteAccount(user.email)
-      clearSessions(user.email)
-      localStorage.removeItem('mh_current_user_email')
-      setUser(null)
-      return true
-    }
-  }), [user])
-  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>
+    loading,
+    signup: fbAuth.signup,
+    login: fbAuth.login,
+    logout: fbAuth.logout,
+    resetPassword: fbAuth.resetPassword,
+    updateProfile: (updates) =>
+      fbAuth.updateUserProfile(user.uid, updates),
+    deleteAccount: () => fbAuth.deleteAccount(auth.currentUser),
+  }
+
+  return (
+    <AuthCtx.Provider value={value}>
+      {!loading && children}
+    </AuthCtx.Provider>
+  )
 }
 
 export function useAuth() {

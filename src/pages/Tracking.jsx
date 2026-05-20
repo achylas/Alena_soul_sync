@@ -3,155 +3,208 @@ import { useAuth } from '../context/AuthContext'
 import { loadSessions } from '../services/storage'
 import { Line } from 'react-chartjs-2'
 import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend
+  Chart as ChartJS, LineElement, CategoryScale,
+  LinearScale, PointElement, Tooltip, Legend, Filler
 } from 'chart.js'
 import '../styles/tracking.css'
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Filler)
 
-const TESTS = ['Assessment']
+const DATASETS = [
+  { key: 'all',        label: 'All Tests',       color: '#5b8def' },
+  { key: 'phq',        label: 'PHQ-9 (Depression)', color: '#7c5cfc' },
+  { key: 'ocd',        label: 'OCD (Y-BOCS)',    color: '#f59e0b' },
+]
+
+function matchDataset(s, key) {
+  if (key === 'all') return true
+  if (key === 'ocd') return s.test?.includes('OCD') || s.test?.includes('Y-BOCS')
+  if (key === 'phq') return !s.test?.includes('OCD') && !s.test?.includes('Y-BOCS')
+  return true
+}
 
 export default function Tracking() {
   const { user } = useAuth()
-  const [test, setTest] = useState(TESTS[0])
+  const [dataset, setDataset] = useState('all')
   const [dateRange, setDateRange] = useState('30d')
   const [chartType, setChartType] = useState('area')
-  const allSessions = useMemo(() => user ? loadSessions(user.email).filter(s => s.test === test) : [], [user, test])
+
+  const allSessions = useMemo(() =>
+    user ? loadSessions(user.email).filter(s => matchDataset(s, dataset)) : [],
+    [user, dataset]
+  )
+
   const filtered = useMemo(() => {
     if (dateRange === 'all') return allSessions
     const now = new Date()
     const cutoff = new Date(now)
-    if (dateRange === '7d') cutoff.setDate(cutoff.getDate() - 7)
+    if (dateRange === '7d')  cutoff.setDate(cutoff.getDate() - 7)
     if (dateRange === '30d') cutoff.setDate(cutoff.getDate() - 30)
     if (dateRange === '90d') cutoff.setDate(cutoff.getDate() - 90)
     return allSessions.filter(s => new Date(s.date) >= cutoff)
   }, [allSessions, dateRange])
+
   const labels = filtered.map(s => new Date(s.date).toLocaleDateString())
-  const data = filtered.map(s => typeof s.score === 'number' ? s.score : null)
+  const scores = filtered.map(s => typeof s.score === 'number' ? s.score : null)
+  const ds = DATASETS.find(d => d.key === dataset) || DATASETS[0]
+
   const eventRadius = filtered.map(s => {
     const n = (s.details?.notes || '').trim()
-    const mark = n.length > 0 || (s.details?.activity || 0) >= 8 || (s.details?.caffeine || 0) >= 6 || (s.details?.screenTime || 0) >= 8
-    return mark ? 6 : 3
+    return n.length > 0 || (s.details?.activity || 0) >= 8 ? 7 : 4
   })
-  const eventColor = filtered.map(s => {
-    const n = (s.details?.notes || '').trim()
-    return n.length > 0 ? '#00d4ff' : '#7c4dff'
-  })
-  const colorMap = { 'Assessment': '#6b5bff' }
-  const baseColor = colorMap[test]
-  const css = typeof window !== 'undefined' ? getComputedStyle(document.body) : null
-  const textColor = css ? (css.getPropertyValue('--text').trim() || '#e6eaf2') : '#e6eaf2'
-  const mutedColor = css ? (css.getPropertyValue('--muted').trim() || '#8b94a7') : '#8b94a7'
-  const borderColor = css ? (css.getPropertyValue('--border').trim() || 'rgba(34,42,54,0.3)') : 'rgba(34,42,54,0.3)'
-  const panelColor = css ? (css.getPropertyValue('--panel').trim() || '#151a22') : '#151a22'
+  const eventColor = filtered.map(s =>
+    (s.details?.notes || '').trim().length > 0 ? '#22d3a0' : ds.color
+  )
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom', labels: { color: textColor } },
+      legend: { position: 'bottom', labels: { color: '#7a94b8', font: { size: 12 }, boxWidth: 12 } },
       tooltip: {
-        mode: 'index',
-        intersect: false,
-        backgroundColor: panelColor,
-        borderColor: borderColor,
+        backgroundColor: '#0e1c30',
+        borderColor: '#1e3358',
         borderWidth: 1,
-        titleColor: textColor,
-        bodyColor: textColor
+        titleColor: '#e8edf5',
+        bodyColor: '#7a94b8',
+        padding: 12,
+        cornerRadius: 10,
+        callbacks: {
+          afterBody: (items) => {
+            const s = filtered[items[0]?.dataIndex]
+            if (!s) return []
+            const lines = []
+            if (s.details?.stress != null)     lines.push(`Stress: ${s.details.stress}/10`)
+            if (s.details?.sleepHours != null)  lines.push(`Sleep: ${s.details.sleepHours}h`)
+            if (s.details?.notes)               lines.push(`Note: ${s.details.notes.slice(0, 40)}`)
+            return lines
+          }
+        }
       }
     },
     scales: {
-      x: { grid: { color: borderColor }, ticks: { color: mutedColor } },
-      y: { grid: { color: borderColor }, ticks: { color: mutedColor } }
+      x: { grid: { color: 'rgba(30,51,88,.6)' }, ticks: { color: '#6b85a8', font: { size: 11 } } },
+      y: { grid: { color: 'rgba(30,51,88,.6)' }, ticks: { color: '#6b85a8', font: { size: 11 } } }
     },
-    elements: { line: { tension: Number(localStorage.getItem('mh_chart_smoothing') || 0.35) }, point: { radius: 3, hoverRadius: 5 } }
+    elements: {
+      line: { tension: Number(localStorage.getItem('mh_chart_smoothing') || 0.4) },
+      point: { radius: eventRadius, hoverRadius: 8 }
+    }
   }
+
   const chartData = {
     labels,
     datasets: [{
-      label: test,
-      data,
-      borderColor: baseColor,
+      label: ds.label,
+      data: scores,
+      borderColor: ds.color,
+      borderWidth: 2,
       backgroundColor: chartType === 'area'
         ? (ctx) => {
-            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 240)
-            g.addColorStop(0, 'rgba(107,91,255,0.35)')
-            g.addColorStop(1, 'rgba(107,91,255,0.05)')
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 280)
+            g.addColorStop(0, ds.color + '44')
+            g.addColorStop(1, ds.color + '05')
             return g
           }
         : 'transparent',
       fill: chartType === 'area',
       pointRadius: eventRadius,
-      pointBackgroundColor: eventColor
+      pointBackgroundColor: eventColor,
+      pointBorderColor: '#0e1c30',
+      pointBorderWidth: 2,
     }]
   }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+    a.download = `soulsync_${dataset}_${dateRange}.json`; a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  function exportCSV() {
+    const header = ['id','date','test','score','severity','stress','sleepHours','activity','screenTime','caffeine','notes']
+    const rows = filtered.map(s => [
+      s.id, s.date, s.test, s.score ?? '', s.severity ?? '',
+      s.details?.stress ?? '', s.details?.sleepHours ?? '',
+      s.details?.activity ?? '', s.details?.screenTime ?? '',
+      s.details?.caffeine ?? '', s.details?.notes ?? ''
+    ])
+    const csv = [header, ...rows].map(r => r.map(x => `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+    a.download = `soulsync_${dataset}_${dateRange}.csv`; a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
   return (
     <div className="tracking">
       <div className="tracking-title">Tracking</div>
+
       <div className="controls">
         <div className="control">
           <label>Dataset</label>
-          <select value={test} onChange={e => setTest(e.target.value)}>
-            {TESTS.map(t => <option key={t} value={t}>{t}</option>)}
+          <select value={dataset} onChange={e => setDataset(e.target.value)}>
+            {DATASETS.map(d => <option key={d.key} value={d.key}>{d.label}</option>)}
           </select>
         </div>
         <div className="control">
           <label>Date Range</label>
           <select value={dateRange} onChange={e => setDateRange(e.target.value)}>
-            <option value="7d">7d</option>
-            <option value="30d">30d</option>
-            <option value="90d">90d</option>
-            <option value="all">All</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+            <option value="all">All time</option>
           </select>
         </div>
         <div className="control">
           <label>Chart Type</label>
           <select value={chartType} onChange={e => setChartType(e.target.value)}>
-            <option value="line">Line</option>
             <option value="area">Area</option>
+            <option value="line">Line</option>
           </select>
         </div>
-        
+        <div className="control-actions">
+          <button className="btn" onClick={exportJSON}>⬇ JSON</button>
+          <button className="btn" onClick={exportCSV}>⬇ CSV</button>
+        </div>
       </div>
-      <div className="actions-row">
-        <button className="btn" onClick={() => {
-          const blob = new Blob([JSON.stringify(filtered, null, 2)], { type: 'application/json' })
-          const a = document.createElement('a')
-          a.href = URL.createObjectURL(blob)
-          a.download = `sessions_${dateRange}.json`
-          a.click()
-          URL.revokeObjectURL(a.href)
-        }}>Export JSON</button>
-        <button className="btn" onClick={() => {
-          const header = ['id','date','test','score','severity','stress','sleepHours','activity','screenTime','caffeine']
-          const rows = filtered.map(s => [
-            s.id,
-            s.date,
-            s.test,
-            s.score ?? '',
-            s.severity ?? '',
-            s.details?.stress ?? '',
-            s.details?.sleepHours ?? '',
-            s.details?.activity ?? '',
-            s.details?.screenTime ?? '',
-            s.details?.caffeine ?? ''
-          ])
-          const csv = [header, ...rows].map(r => r.map(x => `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n')
-          const blob = new Blob([csv], { type: 'text/csv' })
-          const a = document.createElement('a')
-          a.href = URL.createObjectURL(blob)
-          a.download = `sessions_${dateRange}.csv`
-          a.click()
-          URL.revokeObjectURL(a.href)
-        }}>Export CSV</button>
+
+      {/* Stats strip */}
+      <div className="tracking-stats">
+        <div className="ts-item">
+          <span className="ts-label">Sessions</span>
+          <span className="ts-val">{filtered.length}</span>
+        </div>
+        <div className="ts-item">
+          <span className="ts-label">Avg Score</span>
+          <span className="ts-val">
+            {filtered.length ? Math.round(filtered.reduce((a,b) => a + (b.score||0), 0) / filtered.length) : '—'}
+          </span>
+        </div>
+        <div className="ts-item">
+          <span className="ts-label">Min Score</span>
+          <span className="ts-val" style={{ color: '#22d3a0' }}>
+            {filtered.length ? Math.min(...filtered.map(s => s.score ?? 99)) : '—'}
+          </span>
+        </div>
+        <div className="ts-item">
+          <span className="ts-label">Max Score</span>
+          <span className="ts-val" style={{ color: '#f06b6b' }}>
+            {filtered.length ? Math.max(...filtered.map(s => s.score ?? 0)) : '—'}
+          </span>
+        </div>
+        <div className="ts-item">
+          <span className="ts-label">🟢 Event markers</span>
+          <span className="ts-val" style={{ fontSize: 11, color: '#6b85a8' }}>= sessions with notes</span>
+        </div>
       </div>
+
       <div className="chart-wrap">
-        {filtered.length === 0 ? <div className="muted">No data</div> : <Line data={chartData} options={chartOptions} />}
+        {filtered.length === 0
+          ? <div className="muted" style={{ textAlign:'center', padding:40 }}>No data for this range</div>
+          : <Line data={chartData} options={chartOptions} />
+        }
       </div>
     </div>
   )

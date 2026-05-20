@@ -11,19 +11,21 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function onSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    try {
-      await login(email, password)
-      navigate('/dashboard')
-    } catch (err) {
-      setError('Invalid credentials')
-    } finally {
-      setLoading(false)
-    }
+ async function onSubmit(e) {
+  e.preventDefault()
+  setError('')
+  setLoading(true)
+
+  try {
+    await login(email, password)
+    navigate('/dashboard')
+  } catch (err) {
+    setError(err.message || 'Invalid credentials')
+  } finally {
+    setLoading(false)
   }
+}
+
 
   return (
     <div className="auth-screen">

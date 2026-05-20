@@ -1,19 +1,70 @@
-.tracking { display: grid; gap: 16px }
-.tracking-title { font-weight: 700; font-size: 20px }
-.actions-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px }
-.controls { 
+.tracking { display: grid; gap: 20px; }
+.tracking-title { font-weight: 700; font-size: 22px; color: #e8edf5; letter-spacing: -.02em; }
+
+.controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
+  align-items: flex-end;
+  gap: 14px;
+  background: #0e1c30;
+  border: 1.5px solid #1e3358;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
 }
-.control { display: grid; gap: 6px; min-width: 200px; flex: 0 1 200px }
-.control label { margin: 0 0 6px }
-.control-actions { display: flex; gap: 10px; margin-left: auto; flex-wrap: nowrap }
-.controls .btn { align-self: center }
-.chart-wrap { min-height: 300px }
+.control {
+  display: grid;
+  gap: 6px;
+  min-width: 160px;
+  flex: 0 1 160px;
+}
+.control label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b85a8;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin: 0;
+}
+.control-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  align-items: flex-end;
+}
+
+/* Stats strip */
+.tracking-stats {
+  display: flex;
+  gap: 0;
+  background: #0e1c30;
+  border: 1.5px solid #1e3358;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ts-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 10px;
+  border-right: 1px solid #1a2d48;
+}
+.ts-item:last-child { border-right: none; }
+.ts-label { font-size: 10px; font-weight: 700; color: #6b85a8; text-transform: uppercase; letter-spacing: .06em; text-align: center; }
+.ts-val   { font-size: 20px; font-weight: 800; color: #e8edf5; letter-spacing: -.02em; }
+
+/* Chart */
+.chart-wrap {
+  min-height: 320px;
+  background: #0e1c30;
+  border: 1.5px solid #1e3358;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}

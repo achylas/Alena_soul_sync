@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getSession } from '../services/storage';
 import { getResult } from '../services/api';
+import { getPHQ9Insight } from '../services/gemini';
 import '../styles/results.css';
 import Skeleton from '../components/ui/Skeleton';
 
@@ -55,6 +56,22 @@ export default function Results() {
     sleepHours: base.details?.sleepHours ?? null,
     notes: base.details?.notes ?? ''
   };
+
+  // AI insight
+  const [aiInsight, setAiInsight] = useState('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState('')
+
+  useEffect(() => {
+    if (!base) return
+    setAiLoading(true)
+    getPHQ9Insight(base.score, base.severity, base.details)
+      .then(t => setAiInsight(t))
+      .catch(e => setAiError(e.message?.includes('No Gemini')
+        ? 'Add VITE_GEMINI_KEY to .env to enable AI insights.'
+        : 'AI insight unavailable.'))
+      .finally(() => setAiLoading(false))
+  }, [base?.id])
 
   return (
     <div className="results">
@@ -172,6 +189,40 @@ export default function Results() {
 
           </>
         )}
+      </div>
+
+      {/* AI Insight */}
+      <div style={{
+        background: '#0e1c30',
+        border: '1.5px solid rgba(124,92,252,.3)',
+        borderRadius: 16,
+        padding: 22,
+        marginTop: 4,
+      }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
+          <span style={{ fontSize:24 }}>🤖</span>
+          <div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#e8edf5' }}>AI-Powered Interpretation</div>
+            <div style={{ fontSize:11, color:'#6b85a8' }}>Powered by Google Gemini · Not a diagnosis</div>
+          </div>
+        </div>
+        {aiLoading && (
+          <div style={{ display:'flex', alignItems:'center', gap:8, color:'#6b85a8', fontSize:13 }}>
+            <div style={{ width:16, height:16, borderRadius:'50%', border:'2px solid #1e3358', borderTopColor:'#7c5cfc', animation:'spin .8s linear infinite' }} />
+            Analyzing your results…
+          </div>
+        )}
+        {aiError  && <div style={{ color:'#f06b6b', fontSize:13 }}>{aiError}</div>}
+        {aiInsight && <p style={{ fontSize:14, color:'#c8d8f0', lineHeight:1.7, margin:0 }}>{aiInsight}</p>}
+      </div>
+
+      <div style={{ display:'flex', gap:10, marginTop:4 }}>
+        <Link to="/dashboard" style={{ padding:'10px 18px', borderRadius:10, background:'rgba(91,141,239,.12)', border:'1px solid rgba(91,141,239,.25)', color:'#5b8def', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+          ← Dashboard
+        </Link>
+        <Link to="/history" style={{ padding:'10px 18px', borderRadius:10, background:'rgba(255,255,255,.04)', border:'1px solid #1e3358', color:'#6b85a8', fontSize:13, fontWeight:600, textDecoration:'none' }}>
+          View History
+        </Link>
       </div>
     </div>
   );

@@ -1,249 +1,111 @@
-.app-shell { 
-  display: grid; 
-  grid-template-columns: 240px 1fr; 
-  height: 100vh; 
+/* =============================================
+   APP SHELL
+============================================= */
+.app-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  height: 100vh;
+  background: #080e1c;
+}
+.app-shell.collapsed {
+  grid-template-columns: 64px 1fr;
 }
 
-.app-shell.collapsed { 
-  grid-template-columns: 72px 1fr; 
+/* =============================================
+   SIDEBAR stub (full styles in sidebar.css)
+============================================= */
+.sidebar {
+  transition: width 0.28s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
 }
 
-.sidebar { 
-  background: var(--panel); 
-  border-right: 1px solid var(--border); 
-  padding: 20px 16px; 
-  display: grid; 
-  grid-template-rows: auto 1fr auto; 
-  backdrop-filter: blur(8px); /* Soft blur for calm depth */
-  transition: all 0.3s ease;
+/* =============================================
+   MAIN AREA
+============================================= */
+.app-main {
+  display: grid;
+  grid-template-rows: 58px 1fr;
+  overflow: hidden;
+  min-width: 0;
 }
 
-.brand { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  font-weight: 700; 
-  font-size: 18px; 
-  letter-spacing: 0.4px; 
+/* =============================================
+   TOPBAR
+============================================= */
+.topbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  background: #0c1424;
+  border-bottom: 1px solid #1e3358;
+  box-shadow: 0 2px 16px rgba(0,0,0,.5);
+  z-index: 50;
 }
 
-.brand-mark { 
-  width: 32px; 
-  height: 32px; 
-  border-radius: 10px; 
-  display: grid; 
-  place-items: center; 
-  background: linear-gradient(135deg, var(--accent) 0%, var(--primary-2) 100%); /* Softer green-indigo blend */
-  color: #fff; 
-  font-size: 14px; 
-  font-weight: 700; 
+/* =============================================
+   CONTENT AREA
+============================================= */
+.app-content {
+  padding: 24px 28px;
+  overflow: auto;
+  background: #080e1c;
 }
 
-.nav { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 12px; 
-  border-radius: 12px; 
-  margin-top: 4px; 
-  border: 1px solid transparent; 
-  transition: all 0.3s ease; 
-  min-height: 44px; 
+/* =============================================
+   GENERIC CARD
+============================================= */
+.card {
+  background: #0e1c30;
+  border: 1px solid #1e3358;
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.45);
+  transition: border-color .2s, box-shadow .2s, transform .2s;
 }
-
-.nav:hover { 
-  background: rgba(134, 239, 172, 0.08); /* Very subtle green tint */
-  border-color: var(--border); 
+.card:hover {
+  border-color: #3a6adf;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6), 0 0 0 1px rgba(91,141,239,.18);
+  transform: translateY(-2px);
 }
-
-.nav.active { 
-  background: rgba(134, 239, 172, 0.15); /* Soft mint highlight for active */
-  border-color: var(--accent); 
-  color: var(--primary); 
+.card + .card { margin-top: 18px; }
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #e8edf5;
+  margin-bottom: 14px;
 }
+.card-actions { margin-top: 14px; display: flex; gap: 10px; }
 
-.nav .icon { 
-  width: 24px; 
-  height: 24px; 
-  color: var(--muted); 
+/* =============================================
+   COLLAPSE RAIL
+============================================= */
+.collapse-rail {
+  position: fixed;
+  left: 240px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  transition: left .28s cubic-bezier(.4,0,.2,1);
 }
-
-.nav.active .icon { 
-  color: var(--accent); 
-}
-
-/* Collapsed sidebar - clean and minimal */
-.app-shell.collapsed .sidebar { 
-  padding: 20px 12px; 
-  background: var(--panel); 
-  border-right: 1px solid var(--border); 
-}
-
-.app-shell.collapsed .brand .label { 
-  display: none; 
-}
-
-.app-shell.collapsed .nav { 
-  justify-content: center; 
-  padding: 12px; 
-  gap: 0; 
-}
-
-.app-shell.collapsed .nav .label { 
-  display: none; 
-}
-
-.app-shell.collapsed .nav:hover::after { 
-  content: attr(data-label); 
-  position: absolute; 
-  left: 100%; 
-  margin-left: 12px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  background: var(--panel); 
-  border: 1px solid var(--border); 
-  border-radius: 10px; 
-  color: var(--text); 
-  padding: 8px 12px; 
-  white-space: nowrap; 
-  box-shadow: 0 8px 20px var(--shadow); 
-  font-size: 14px;
-}
-
-.app-shell.collapsed .nav.active { 
-  background: rgba(134, 239, 172, 0.2); 
-}
-
-.app-shell.collapsed .nav.active .icon { 
-  color: var(--accent); 
-}
-
-/* Light theme subtle adjustments */
-.theme-light .app-shell.collapsed .nav.active { 
-  background: rgba(134, 239, 172, 0.12); 
-}
-
-.sidebar-footer { 
-  margin-top: 20px; 
-  color: var(--muted); 
-  font-size: 13px; 
-  text-align: center; 
-}
-
-.app-main { 
-  display: grid; 
-  grid-template-rows: 64px 1fr; 
-}
-
-.topbar { 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  background: var(--panel); /* Clean and matching sidebar */
-  border-bottom: 1px solid var(--border); 
-  padding: 0 24px; 
-  backdrop-filter: blur(8px);
-}
-
-.top-title { 
-  font-weight: 600; 
-  font-size: 16px; 
-}
-
-.top-actions { 
-  display: flex; 
-  gap: 16px; 
-  align-items: center; 
-}
-
-.user-chip { 
-  padding: 8px 14px; 
-  border-radius: 999px; 
-  background: rgba(134, 239, 172, 0.15); 
-  border: 1px solid var(--border); 
-  font-size: 14px; 
-  color: var(--text);
-}
-
-.app-content { 
-  padding: 24px; 
-  overflow: auto; 
-  background: var(--bg);
-}
-
-.card { 
-  background: var(--panel); 
-  border: 1px solid var(--border); 
-  border-radius: 20px; 
-  padding: 20px; 
-  box-shadow: 0 4px 16px var(--shadow); /* Subtle elevation */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
-}
-
-.card:hover { 
-  transform: translateY(-4px); 
-  box-shadow: 0 8px 24px var(--shadow); 
-}
-
-.card + .card { 
-  margin-top: 20px; 
-}
-
-.card-title { 
-  font-weight: 600; 
-  font-size: 16px; 
-  margin-bottom: 12px; 
-  color: var(--text);
-}
-
-.card-actions { 
-  margin-top: 16px; 
-  display: flex; 
-  gap: 12px; 
-}
-
-/* Collapse rail - softer button */
-.collapse-rail { 
-  position: fixed; 
-  left: 240px; /* Adjust based on sidebar width */
-  top: 50%; 
-  transform: translateY(-50%); 
-  z-index: 999; 
-  transition: left 0.3s ease;
-}
-
-.app-shell.collapsed .collapse-rail { 
-  left: 72px; 
-}
-
-.rail-btn { 
-  width: 40px; 
-  height: 40px; 
-  border-radius: 999px; 
-  border: 1px solid var(--border); 
-  background: var(--panel); 
-  color: var(--muted); 
-  box-shadow: 0 4px 12px var(--shadow); 
-  cursor: pointer; 
-  display: grid; 
+.app-shell.collapsed .collapse-rail { left: 64px; }
+.rail-btn {
+  width: 20px;
+  height: 44px;
+  border-radius: 0 8px 8px 0;
+  border: 1px solid #1e3358;
+  border-left: none;
+  background: #0e1c30;
+  color: #6b85a8;
+  cursor: pointer;
+  display: grid;
   place-items: center;
+  transition: all .2s;
+  box-shadow: 3px 0 12px rgba(0,0,0,.4);
 }
-
-.rail-btn:hover { 
-  background: rgba(134, 239, 172, 0.2); 
-  color: var(--accent);
-}
-
-/* Light/Dark overrides */
-.theme-light .topbar { 
-  background: var(--panel); 
-}
-
-.theme-light .card { 
-  background: var(--panel); 
-}
-
-.theme-dark .card { 
-  background: var(--panel); 
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+.rail-btn:hover {
+  background: #162040;
+  color: #5b8def;
+  border-color: #3a6adf;
 }

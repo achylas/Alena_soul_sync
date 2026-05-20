@@ -6,17 +6,16 @@ import { submitTest } from '../services/api'
 import '../styles/tests.css'
 import { useToast } from '../components/ToastProvider'
 
-const QUESTIONS = [
-  'Mood: felt down or low',
-  'Energy: felt tired or low energy',
-  'Sleep quality',
-  'Appetite changes',
-  'Concentration difficulties',
-  'Restlessness',
-  'Worrying frequently',
-  'Irritability',
-  'Hopelessness',
-  'Physical symptoms (headaches, tension)'
+const PHQ9_QUESTIONS = [
+  'Little interest or pleasure in doing things?',
+  'Feeling down, depressed, or hopeless?',
+  'Trouble falling or staying asleep, or sleeping too much?',
+  'Feeling tired or having little energy?',
+  'Poor appetite or overeating?',
+  'Feeling bad about yourself — or that you are a failure or have let yourself or your family down?',
+  'Trouble concentrating on things, such as reading the newspaper or watching television?',
+  'Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?',
+  'Thoughts that you would be better off dead, or of hurting yourself in some way?'
 ]
 
 const OPTIONS_0_3 = [
@@ -33,11 +32,11 @@ export default function Tests() {
   const BACKEND_ENABLED = import.meta.env.VITE_ENABLE_BACKEND === 'true'
 
   const [step, setStep] = useState(0) // question index
-  const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null))
+  const [answers, setAnswers] = useState(Array(PHQ9_QUESTIONS.length).fill(null))
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  // Advanced
+  // Advanced / lifestyle extras (kept as-is)
   const [stress, setStress] = useState(5)
   const [sleepHours, setSleepHours] = useState(7)
   const [activity, setActivity] = useState(5)
@@ -45,8 +44,8 @@ export default function Tests() {
   const [caffeine, setCaffeine] = useState(2)
   const [notes, setNotes] = useState('')
 
-  const isAdvancedStep = step === QUESTIONS.length
-  const percent = Math.round(((step) / (QUESTIONS.length + 1)) * 100)
+  const isAdvancedStep = step === PHQ9_QUESTIONS.length
+  const percent = Math.round(((step) / (PHQ9_QUESTIONS.length + 1)) * 100)
 
   function setAnswer(value) {
     const next = [...answers]
@@ -74,16 +73,24 @@ export default function Tests() {
       let res = null
       if (BACKEND_ENABLED) {
         res = await submitTest({
-          test: 'Assessment',
+          test: 'PHQ-9 Assessment',
           email: user.email,
           answers,
           extras: { stress, sleepHours, activity, screenTime, caffeine, notes }
         })
       }
 
-      const scoreBase = answers.reduce((s, v) => s + v, 0)
-      const score =
-        scoreBase +
+      const phq9Score = answers.reduce((s, v) => s + (v || 0), 0)
+
+      let severity
+      if (phq9Score <= 4) severity = 'Minimal'
+      else if (phq9Score <= 9) severity = 'Mild'
+      else if (phq9Score <= 14) severity = 'Moderate'
+      else if (phq9Score <= 19) severity = 'Moderately Severe'
+      else severity = 'Severe'
+
+      // Optional: keep your old custom score if you want it in details
+      const customExtraScore =
         Math.max(0, stress - sleepHours) +
         Math.max(0, screenTime - 2) +
         Math.max(0, caffeine - 1) -
@@ -91,12 +98,12 @@ export default function Tests() {
 
       const session = {
         id: res?.id ?? crypto.randomUUID(),
-        test: 'Assessment',
+        test: 'PHQ-9 Assessment',
         date: new Date().toISOString(),
         answers,
-        score,
-        severity: res?.severity ?? (score <= 9 ? 'Low' : score <= 19 ? 'Moderate' : 'High'),
-        details: res?.details ?? { stress, sleepHours, activity, screenTime, caffeine, notes }
+        score: phq9Score,
+        severity: res?.severity ?? severity,
+        details: res?.details ?? { stress, sleepHours, activity, screenTime, caffeine, notes, customExtraScore }
       }
 
       addSession(user.email, session)
@@ -111,21 +118,19 @@ export default function Tests() {
 
   return (
     <div className="test">
-      <div className="tests-title">Mental Health Assessment</div>
-
+      <div className="tests-title">PHQ-9 Depression Assessment</div>
       <div className="progress">
         <span style={{ width: percent + '%' }} />
       </div>
-
       {error && <div className="error">{error}</div>}
 
-      {/* QUESTION CARD */}
+      {/* MAIN PHQ-9 QUESTIONS */}
       {!isAdvancedStep && (
         <div className="qa-item question-card">
           <div className="q">
-            {step + 1}. {QUESTIONS[step]}
+            {step + 1}. {PHQ9_QUESTIONS[step]}
           </div>
-
+          <div className="q-subtitle">Over the last 2 weeks, how often have you been bothered by this?</div>
           <div className="a">
             {OPTIONS_0_3.map(opt => (
               <label
@@ -145,20 +150,18 @@ export default function Tests() {
         </div>
       )}
 
-      {/* ADVANCED STEP */}
+      {/* ADVANCED LIFESTYLE STEP */}
       {isAdvancedStep && (
         <div className="advanced">
-          <div className="advanced-title">Lifestyle & Context</div>
-
+          <div className="advanced-title">Lifestyle & Context (Optional)</div>
           <div className="advanced-grid">
             <Range label="Stress level" value={stress} setValue={setStress} max={10} />
             <Range label="Sleep hours" value={sleepHours} setValue={setSleepHours} max={12} />
             <Range label="Activity level" value={activity} setValue={setActivity} max={10} />
-            <Range label="Screen time" value={screenTime} setValue={setScreenTime} max={12} />
+            <Range label="Screen time (hours)" value={screenTime} setValue={setScreenTime} max={12} />
             <Range label="Caffeine (cups)" value={caffeine} setValue={setCaffeine} max={10} />
           </div>
-
-          <label>Notes</label>
+          <label>Additional notes</label>
           <textarea rows="3" value={notes} onChange={e => setNotes(e.target.value)} />
         </div>
       )}
@@ -170,13 +173,11 @@ export default function Tests() {
             Back
           </button>
         )}
-
         {!isAdvancedStep && (
           <button className="btn primary" onClick={next}>
             Next
           </button>
         )}
-
         {isAdvancedStep && (
           <button className="btn primary" onClick={submit} disabled={submitting}>
             {submitting ? 'Submitting…' : 'Finish Assessment'}

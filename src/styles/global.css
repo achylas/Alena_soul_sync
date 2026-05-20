@@ -1,5 +1,5 @@
 /* =========================================================
-   MENTAL HEALTH AI – SERENE CLINICAL THEME
+   SOULSYNC – SERENE CLINICAL THEME
    Designed for calm, trust, accessibility, and endurance
    ========================================================= */
 
@@ -7,44 +7,60 @@
    ROOT (DARK – DEFAULT)
 ----------------------------- */
 :root {
-  --bg: #0f172a;               /* Deep slate blue */
-  --panel: #111c33;            /* Elevated surfaces */
+  --bg:          #0b1120;
+  --bg-2:        #0d1526;
+  --panel:       #101828;
+  --panel-soft:  #121e30;
 
-  --text: #e5e9f2;             /* Soft white */
-  --muted: #8199bb;            /* Calm gray-blue */
+  --text:        #e8edf5;
+  --muted:       #6b85a8;
 
-  --primary: #93e7f5;          /* Trust blue */
-  --primary-soft: #d2daef;
+  --primary:     #5b8def;
+  --primary-2:   #7c5cfc;
+  --primary-soft:#162040;
 
-  --accent: #4cb8a1;           /* Healing green */
+  --accent:      #22d3a0;
+  --accent-soft: #0a2a1e;
 
-  --success: #4cb8a1;
-  --danger: #a70f0f;           /* Muted red */
+  --warning:     #f59e0b;
+  --warning-soft:#271a00;
 
-  --border: #1e293b;
-  --shadow: rgba(15, 23, 42, 0.45);
+  --success:     #22d3a0;
+  --danger:      #f06b6b;
+  --danger-soft: #2a0f0f;
+
+  --border:      #1a2d48;
+  --border-hi:   #2a4070;
+  --shadow:      rgba(5,10,25,0.6);
+  --shadow-lg:   rgba(5,10,25,0.8);
+
+  --radius:    12px;
+  --radius-lg: 18px;
+  --radius-sm: 8px;
 }
 
-/* -----------------------------
-   LIGHT THEME (CLINICAL)
------------------------------ */
+/* Light theme = same dark values so it never goes white */
 .theme-light {
-  --bg: #c9f6fb;
-  --panel: #fdfafa;
-
-  --text: #0f172a;
-  --muted: #64748b;
-
-  --primary: #4f7cff;
-  --primary-soft: #e8efff;
-
-  --accent: #4cb8a1;
-
-  --success: #3da48c;
-  --danger: #9a1010;
-
-  --border: #dbe3f0;
-  --shadow: rgba(15, 23, 42, 0.08);
+  --bg:          #0b1120;
+  --bg-2:        #0d1526;
+  --panel:       #101828;
+  --panel-soft:  #121e30;
+  --text:        #e8edf5;
+  --muted:       #6b85a8;
+  --primary:     #5b8def;
+  --primary-2:   #7c5cfc;
+  --primary-soft:#162040;
+  --accent:      #22d3a0;
+  --accent-soft: #0a2a1e;
+  --warning:     #f59e0b;
+  --warning-soft:#271a00;
+  --success:     #22d3a0;
+  --danger:      #f06b6b;
+  --danger-soft: #2a0f0f;
+  --border:      #1a2d48;
+  --border-hi:   #2a4070;
+  --shadow:      rgba(5,10,25,0.6);
+  --shadow-lg:   rgba(5,10,25,0.8);
 }
 
 /* -----------------------------
@@ -75,9 +91,9 @@ body {
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 20px;
-  box-shadow: 0 6px 20px var(--shadow);
+  box-shadow: 0 4px 16px var(--shadow);
 }
 
 /* -----------------------------
@@ -95,29 +111,35 @@ p {
 
 .muted {
   color: var(--muted);
+  font-size: 14px;
 }
 
 /* -----------------------------
-   BUTTONS (CALM INTERACTION)
+   BUTTONS
 ----------------------------- */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 12px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
   font-size: 14px;
   font-weight: 500;
   border: 1px solid var(--border);
-  background: var(--panel);
+  background: var(--panel-soft);
   color: var(--text);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn:hover {
-  background: #162447;
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
   transform: translateY(-1px);
+  text-decoration: none;
 }
 
 .btn:active {
@@ -131,7 +153,16 @@ p {
 }
 
 .btn.primary:hover {
-  background: #3f6df0;
+  background: var(--primary-2);
+  border-color: var(--primary-2);
+  color: #ffffff;
+  filter: brightness(1.1);
+}
+
+.btn.primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn.success {
@@ -140,13 +171,30 @@ p {
   border-color: var(--accent);
 }
 
+.btn.success:hover {
+  filter: brightness(1.1);
+  color: #ffffff;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #ffffff;
+  border-color: var(--danger);
+}
+
+.btn.danger:hover {
+  filter: brightness(1.1);
+  color: #ffffff;
+}
+
 /* -----------------------------
-   INPUTS (THERAPY SAFE)
+   INPUTS
 ----------------------------- */
 label {
   display: block;
   margin-bottom: 6px;
   font-size: 13px;
+  font-weight: 500;
   color: var(--muted);
 }
 
@@ -154,10 +202,10 @@ input,
 select,
 textarea {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: #0b1324;
+  background: var(--bg-2);
   color: var(--text);
   font-size: 14px;
   transition: border 0.2s ease, box-shadow 0.2s ease;
@@ -172,7 +220,7 @@ textarea {
 input::placeholder,
 textarea::placeholder {
   color: var(--muted);
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 input:focus,
@@ -180,40 +228,46 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(107, 143, 255, 0.15);
 }
 
 /* -----------------------------
-   ALERTS (EMOTIONALLY SAFE)
+   ALERTS
 ----------------------------- */
-.success {
-  background: rgba(76, 184, 161, 0.12);
-  border: 1px solid rgba(76, 184, 161, 0.4);
-  color: #b8f1e4;
-  padding: 12px;
-  border-radius: 12px;
+.alert-success {
+  background: var(--accent-soft);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: var(--accent);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
 }
 
+.alert-error,
 .error {
-  background: rgba(239, 106, 106, 0.12);
-  border: 1px solid rgba(239, 106, 106, 0.4);
-  color: #ffd4d4;
-  padding: 12px;
-  border-radius: 12px;
+  background: var(--danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: var(--danger);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
 }
 
 /* -----------------------------
    PILLS / TAGS
 ----------------------------- */
 .pill {
-  display: inline-block;
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  background: rgba(79, 124, 255, 0.12);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--primary-soft);
   color: var(--primary);
-  border: 1px solid rgba(79, 124, 255, 0.3);
+  border: 1px solid rgba(107, 143, 255, 0.25);
 }
 
 /* -----------------------------
@@ -229,14 +283,14 @@ a:hover {
 }
 
 /* -----------------------------
-   SCROLLBAR (SUBDUED)
+   SCROLLBAR
 ----------------------------- */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -246,6 +300,15 @@ a:hover {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+}
+
+/* -----------------------------
+   DIVIDER
+----------------------------- */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
 }
 
 /* -----------------------------
